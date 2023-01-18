@@ -1,0 +1,45 @@
+
+getgenv().pet = true;
+getgenv().Stage = true;
+
+spawn(function () 
+    while getgenv().Stage == true do
+        local args = {[1] = {[1] = "WarpPlrToOtherMap",[2] = "Next"}}
+        game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
+     wait(0.1)
+  end
+end)
+
+wait(10)
+
+spawn(function () 
+    while getgenv().pet == true do
+        local args = {[1] = {[1] = "UpgradeCurrentPet"}}
+        game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
+        wait(0.1)
+    end
+end)
+
+
+    local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local Rejoin = coroutine.create(function()
+    for _,v in pairs(game:GetService("Workspace").Map.Stages:GetDescendants()) do
+        if v:IsA("TouchTransmitter") then
+        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0)
+        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) 
+        end
+    end
+    wait(3)
+    local Success, ErrorMessage = pcall(function()
+        TeleportService:Teleport(game.PlaceId, LocalPlayer)
+    end)
+
+    if ErrorMessage and not Success then
+        warn(ErrorMessage)
+    end
+end)
+
+coroutine.resume(Rejoin)
